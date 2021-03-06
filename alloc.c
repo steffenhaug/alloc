@@ -28,7 +28,7 @@ struct ctrl* free_list_start = NULL;
 // the free list.
 struct ctrl* ALLOCATED = (struct ctrl*) 0xADDE;
 
-void init() {
+void alloc_init() {
     // Create control block that spans all memory.
     struct ctrl* initial = (struct ctrl*) heap;
     initial->size = memsize - blocksize;
@@ -47,7 +47,7 @@ void *byteafter(struct ctrl *blk) {
 
 void *alloc(size_t nbytes) {
     if (!initialized) {
-        init();
+        alloc_init();
     }
 
     // We only allocate multiples of 8 bytes.
@@ -101,7 +101,7 @@ void free(void *ptr) {
     struct ctrl *blk = ((struct ctrl *) ptr) - 1;
 
     // Check for NULL-free and double free. (NOOP)
-    if (ptr == NULL || blk->next != ALLOCATED) {
+    if (ptr == NULL || blk->next != ALLOCATED) {
         return;
     }
 
